@@ -26,7 +26,7 @@
                     </el-form-item>
  
                     <el-form-item prop="password">
-                        <el-input v-model="form.password" type="password"  placeholder="请输入密码" show-password> 
+                        <el-input v-model="form.password" type="password" @keydown.enter.native="onSubmit" placeholder="请输入密码" show-password> 
                             <template #prefix>
                                 <el-icon><Lock /></el-icon>
                             </template>
@@ -47,6 +47,13 @@
 <script setup>
 import { reactive, ref } from 'vue'
 // import { Calendar, Search, User, Lock } from '@element-plus/icons-vue'
+import { useRouter } from 'vue-router'
+import { loginPost } from '@/api/manage.js'
+import { ElMessage } from 'element-plus'
+import { useCookies } from '@vueuse/integrations/useCookies'
+const cookies = useCookies()
+
+const router = useRouter()   // vue-router 官网有讲 和 vue2.x方式不同  ！！！我人都傻 了，我这里引入错误导致 router.push出错然后 暴露出了错误。
 
 // do not use same name with ref
 const form = reactive({
@@ -66,14 +73,48 @@ const rules = {
 
 const formRef = ref(null) // null 是单值 所以用 ref
 const onSubmit = () => {
+    console.log(`点击`)
     // validate 是拿到验证表单的验证结果 true / false 。根据上面写的验证来得到不同的结果的
-    formRef.value.validate((valid)=> {
-        console.log(valid)  //true / false
+    formRef.value.validate( (valid)=> {
+        // console.log(valid)  //true / false
         if (!valid) {
             return false
         }
-
+        loginPost(form.username, form.password)
+            .then(res => {
+                console.log(res)
+                // 1. 提示成功
+                ElMessage({
+                    message: "登录成功",
+                    type: 'success',
+                    grouping: false,
+                    duration: 2424
+                })
+                // 2. 存储 token
+                cookies.set("admin-token", res.data.data.token)
+                
+                // 3. 跳转页面   注意这里的坑，promise 中如果在 then中返回一个错误，那么会被捕获到自动执行下面的 catch
+                  //  有趣的是 router.push 也是一个promise对象，所以，如果push出了错误，可能也会执行 下面的登录逻辑中的catch这很不好
+                router.push({   
+                    name: 'Index',
+                    path: '/'
+                })
+            })
+            .catch(err => {
+                console.log(`catch`)
+                console.log(err.response)
+                ElMessage({
+                    message: err.response.data.msg || '请求失败',
+                    type: 'error',
+                    grouping: false,
+                    duration: 2424
+                })
+            })
+        // const res = await loginReq(form.username, form.password);
+        // console.log(res)
     })
+    // console.log(`我在上面的验证之前输出，`)
+    // 说明  那个验证函数是异步的，具体element在验证 表单的地方提到
 }
 
 </script>

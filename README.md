@@ -73,4 +73,20 @@ This template should help get you started developing with Vue 3 in Vite. The tem
   2. 在 item 标签中添加属性 prop="" 指定需要验证的键值，具体看代码
   3. 以上步骤只是表单内部输入的时候验证，并没有在提交前验证
   4. 需要 获取 form 表单 DOM ，拿到其中的 validate 值判断验证结果 根据这个结果做出处理
-
+- axois 请求 完善登录功能
+  - API接口 : [dishaxy.dishait.cn/shopadminapi](http://dishaxy.dishait.cn/shopadminapi#8dcb983b-d4e3-4888-8c11-910af2aa661d)
+  - 复习 前端使用代理服务器方式 ，解决跨域问题. 每个框架配置方式不一样， vite 里面看配置页面的 proxy
+  - 学习 vite 配置 代理服务器
+  - element message 消息弹窗组件的使用
+  - element input 组件 绑定 键盘回车 实现按钮登录功能
+      :basketball: vue.js 绑定的@keydown 触发有个 __前提__ 就是 该元素要 __获得焦点__ 。所以如果单纯的用这个vue.js原生方式绑定到 button 上并不可行
+      但是可以绑定到最后一个 input 元素上，注意 ! 有时候不生效的情况，使用修饰符，
+      ```js
+      @keydown.enter.native="onSubmit"
+      ```
+      还有一种写法就是页面监听键盘 enter 按键，不过这种写法感觉会降低页面效率不好：贴个链接吧，[留作记录](https://blog.csdn.net/qq_37588752/article/details/80005160)
+  - 存储 token 
+    - 使用 vueuse.org 提供的方法在 vue.js中 来操作 cookie 
+        :bomb: 什么时候自己封装一个 
+      :dizzy_face: 这用方法有点繁琐，居然还需要一个依赖。
+  
