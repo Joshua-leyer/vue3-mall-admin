@@ -59,4 +59,18 @@ This template should help get you started developing with Vue 3 in Vite. The tem
  
   /src/pages/login.vue
 
+- setup
+   SFC 单文件组件，组合式API编写方式，需要的语法糖
+   [官方链接](https://cn.vuejs.org/api/composition-api-setup.html#basic-usage)
+  - 简单复习 ref ， reactive
+
+- element-plust form表单验证
+  :imp:正常的思维逻辑，一定会想这个规则有哪些可以写，怎么写? 蛋疼的是官网并没有明确的提示有哪些字段可以写。教程也不说，烦死。
+  :grinning: 最终我在一个人的博客上看到相关文章：[CSDN-element-plus表单验证使用 个人总结](https://blog.csdn.net/ymzhaobth/article/details/120820053)
+  :imp:看这个文章，最起码我知道 rules 中有哪些字段可以填写 ， trigger 字段是 element-plus 提供的，有 blur / change 两个可选值。 这些教程不说，学习的人怎么会知道呢？
+  步骤 >
+  1. 表单要添加 :rules="rules" 属性
+  2. 在 item 标签中添加属性 prop="" 指定需要验证的键值，具体看代码
+  3. 以上步骤只是表单内部输入的时候验证，并没有在提交前验证
+  4. 需要 获取 form 表单 DOM ，拿到其中的 validate 值判断验证结果 根据这个结果做出处理
 

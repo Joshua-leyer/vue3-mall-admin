@@ -15,24 +15,22 @@
                     <span>账号密码</span>
                     <span class="line "></span>
                 </div>
-                <el-form :model="form" class="w-[250px]">
-                    <el-form-item >
-                        <el-input 
-                          v-model="form.username" 
-                          placeholder="请输入用户名">
+
+                <el-form :model="form" :rules="rules" ref="formRef" class="w-[250px]">
+                    <el-form-item  prop="username">
+                        <el-input v-model="form.username" placeholder="请输入用户名">
                           <template #prefix>
                                 <el-icon><User /></el-icon>
                             </template>
                         </el-input>
                     </el-form-item>
  
-                    <el-form-item >
-                        <el-input v-model="form.password" placeholder="请输入密码" > 
+                    <el-form-item prop="password">
+                        <el-input v-model="form.password" type="password"  placeholder="请输入密码" show-password> 
                             <template #prefix>
                                 <el-icon><Lock /></el-icon>
                             </template>
                         </el-input>
-
                     </el-form-item>
 
                     <el-form-item>
@@ -47,7 +45,7 @@
   
 
 <script setup>
-import { reactive } from 'vue'
+import { reactive, ref } from 'vue'
 // import { Calendar, Search, User, Lock } from '@element-plus/icons-vue'
 
 // do not use same name with ref
@@ -56,9 +54,28 @@ const form = reactive({
     password: ""
 })
 
-const onSubmit = () => {
-console.log('submit!')
+const rules = {
+    username: [
+        { required: true, message: 'Please input  username', trigger: 'blur' },
+        { min: 3, max: 10, message: 'Length should be 3 to 10', trigger: 'blur' }
+    ],
+    password: [
+        { required: true, message: 'Please input  username', trigger: 'blur' }
+    ]
 }
+
+const formRef = ref(null) // null 是单值 所以用 ref
+const onSubmit = () => {
+    // validate 是拿到验证表单的验证结果 true / false 。根据上面写的验证来得到不同的结果的
+    formRef.value.validate((valid)=> {
+        console.log(valid)  //true / false
+        if (!valid) {
+            return false
+        }
+
+    })
+}
+
 </script>
 
 <style scoped>
