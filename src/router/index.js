@@ -3,8 +3,15 @@ import { createRouter, createWebHashHistory } from 'vue-router'
 import Index from '@/pages/index.vue'
 import About from '@/pages/about.vue'
 import NotFoundPage from '@/pages/404.vue'
+import Login from '@/pages/login.vue'
+
 
 const routes = [
+    {
+        path: "/login",
+        name: "Login",
+        component: Login
+    },
     {
         path: "/",
         name: "Index",
