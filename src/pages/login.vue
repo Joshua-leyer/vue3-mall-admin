@@ -34,7 +34,7 @@
                     </el-form-item>
 
                     <el-form-item>
-                        <el-button type="primary" class="login-button" @click="onSubmit">登 录</el-button>
+                        <el-button type="primary" class="login-button" @click="onSubmit" :loading="Loginloading">登 录</el-button>
                     </el-form-item>
                 </el-form>
             </el-col>
@@ -48,10 +48,9 @@
 import { reactive, ref } from 'vue'
 // import { Calendar, Search, User, Lock } from '@element-plus/icons-vue'
 import { useRouter } from 'vue-router'
-import { loginPost } from '@/api/manage.js'
-import { ElMessage } from 'element-plus'
-import { useCookies } from '@vueuse/integrations/useCookies'
-const cookies = useCookies()
+import { loginPost, getInfo } from '@/api/manage.js'
+import { setToken } from '@/composables/auth.js'
+import { toast } from '@/composables/util.js'
 
 const router = useRouter()   // vue-router 官网有讲 和 vue2.x方式不同  ！！！我人都傻 了，我这里引入错误导致 router.push出错然后 暴露出了错误。
 
@@ -72,6 +71,9 @@ const rules = {
 }
 
 const formRef = ref(null) // null 是单值 所以用 ref
+const Loginloading = ref(false)   // 默认 false , 按钮为不是加载状态
+
+
 const onSubmit = () => {
     console.log(`点击`)
     // validate 是拿到验证表单的验证结果 true / false 。根据上面写的验证来得到不同的结果的
@@ -80,19 +82,19 @@ const onSubmit = () => {
         if (!valid) {
             return false
         }
+        Loginloading.value = true
         loginPost(form.username, form.password)
             .then(res => {
                 console.log(res)
-                // 1. 提示成功
-                ElMessage({
-                    message: "登录成功",
-                    type: 'success',
-                    grouping: false,
-                    duration: 2424
-                })
+                // 1. 提示成功  
+                toast("登录成功", 'success')
                 // 2. 存储 token
-                cookies.set("admin-token", res.data.data.token)
-                
+                setToken(res.token)               
+                /** 携带token 获取用户信息测试 */
+                getInfo().then(res2 => {
+                    console.log(res2)
+                })
+
                 // 3. 跳转页面   注意这里的坑，promise 中如果在 then中返回一个错误，那么会被捕获到自动执行下面的 catch
                   //  有趣的是 router.push 也是一个promise对象，所以，如果push出了错误，可能也会执行 下面的登录逻辑中的catch这很不好
                 router.push({   
@@ -101,14 +103,10 @@ const onSubmit = () => {
                 })
             })
             .catch(err => {
-                console.log(`catch`)
                 console.log(err.response)
-                ElMessage({
-                    message: err.response.data.msg || '请求失败',
-                    type: 'error',
-                    grouping: false,
-                    duration: 2424
-                })
+            })
+            .finally(() => {
+                Loginloading.value = false
             })
         // const res = await loginReq(form.username, form.password);
         // console.log(res)

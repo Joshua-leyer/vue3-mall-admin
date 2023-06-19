@@ -85,8 +85,23 @@ This template should help get you started developing with Vue 3 in Vite. The tem
       @keydown.enter.native="onSubmit"
       ```
       还有一种写法就是页面监听键盘 enter 按键，不过这种写法感觉会降低页面效率不好：贴个链接吧，[留作记录](https://blog.csdn.net/qq_37588752/article/details/80005160)
-  - 存储 token 
-    - 使用 vueuse.org 提供的方法在 vue.js中 来操作 cookie 
-        :bomb: 什么时候自己封装一个 
-      :dizzy_face: 这用方法有点繁琐，居然还需要一个依赖。
+- 存储 token 
+    前端存储 token 的。 我们还可以在写后端的时候，这些东西由后端来写。
+  - 使用 vueuse.org 提供的方法在 vue.js中 来操作 cookie 
+    :bomb: 什么时候自己封装一个 
+    :dizzy_face: 这用方法有点繁琐，居然还需要一个依赖。
+
+- asios 请求拦截器的使用
+  src/axios.js
+  - 学习这里的请求前是否携带 token 的处理
   
+- 防止 登录按钮 多次点击的问题
+  使用 vue.js 提供的 :loading 属性，为标签修改为加载状态
+  ```html
+  <el-button  :loading="Loginloading">登 录</el-button>
+  ```
+- 封装抽离 token & message
+  
+  - 封装抽离 token /composables/auth.js 
+  - 抽离 message 消息提示 /composables/util.js
+    :grey_exclamation:所有的错误提示都在 axios.js 中拦截了
