@@ -104,4 +104,19 @@ This template should help get you started developing with Vue 3 in Vite. The tem
   
   - 封装抽离 token /composables/auth.js 
   - 抽离 message 消息提示 /composables/util.js
-    :grey_exclamation:所有的错误提示都在 axios.js 中拦截了
+    :grey_exclamation: 所有的错误提示都在 axios.js 中拦截了
+- vuex 使用
+  这里具体怎么引用需要看官网，和vue-router差不多
+  - 复习 vuex 的使用
+- 全局路由守卫
+  我不是很喜欢教程的 文件结构，很乱。乱到，代码为什么要这样写都忘记了。
+  我把全局守卫写在 /router/index.js 
+
+- 衍生的一个重要的大头思路的知识点
+  vue 怎么做验证权限功能的思路
+  
+### :fearful: 
+  目前学习到了一个我觉得学习来比较难理解的地方了。
+  eg: 当登录成功以后自动跳转到首页时候会显示请求到的用户信息，但是如果在首页刷新，则信息消失。 教程的解决方案，我无法理解。 
+    ~~教程就是这样的，通常直说，这样，那样，不说为什么。很烦人。~~
+  :question::x: 目前暂停一下这边的学习，我需要学习关于vuex ，路由导航，vue做权限验证这块的知识。

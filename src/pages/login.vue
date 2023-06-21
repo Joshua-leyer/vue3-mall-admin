@@ -51,9 +51,10 @@ import { useRouter } from 'vue-router'
 import { loginPost, getInfo } from '@/api/manage.js'
 import { setToken } from '@/composables/auth.js'
 import { toast } from '@/composables/util.js'
+import { useStore }  from 'vuex'
 
 const router = useRouter()   // vue-router 官网有讲 和 vue2.x方式不同  ！！！我人都傻 了，我这里引入错误导致 router.push出错然后 暴露出了错误。
-
+const store = useStore()
 // do not use same name with ref
 const form = reactive({
     username: "",
@@ -85,14 +86,15 @@ const onSubmit = () => {
         Loginloading.value = true
         loginPost(form.username, form.password)
             .then(res => {
-                console.log(res)
                 // 1. 提示成功  
                 toast("登录成功", 'success')
                 // 2. 存储 token
-                setToken(res.token)               
-                /** 携带token 获取用户信息测试 */
-                getInfo().then(res2 => {
-                    console.log(res2)
+                setToken(res.token) 
+
+                /** 携带token 获取用户信息 */
+                getInfo().then(res2_userdata => {
+                    store.commit("SET_USERINFO", res2_userdata)
+
                 })
 
                 // 3. 跳转页面   注意这里的坑，promise 中如果在 then中返回一个错误，那么会被捕获到自动执行下面的 catch
